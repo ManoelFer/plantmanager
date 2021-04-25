@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 
-import { StyleSheet, View, Text, Image, FlatList } from "react-native";
+import { StyleSheet, View, Text, Image, FlatList, Alert } from "react-native";
 import colors from "../styles/colors";
 import waterdrop from "../assets/waterdrop.png";
 
 import { Header } from "../components/Header";
 import { PlantCardSecondary } from "../components/PlantCardSecondary";
 
-import { loadPlant, PlantProps } from "../libs/storage";
+import { loadPlant, PlantProps, removePlant } from "../libs/storage";
 import { formatDistance } from "date-fns";
 import { pt } from "date-fns/locale";
 import fonts from "../styles/fonts";
+import { Load } from "../components/Load";
 
 export function MyPlants() {
   const [myPlants, setMyPlants] = useState<PlantProps[]>([]);
@@ -39,6 +40,31 @@ export function MyPlants() {
     loadStorageData();
   }, []);
 
+  function handleRemove(plant: PlantProps) {
+    Alert.alert("Remover", `Deseja remover a ${plant.name}?`, [
+      {
+        text: "Não 🙏",
+        style: "cancel",
+      },
+      {
+        text: "Sim 😥🥀",
+        onPress: async () => {
+          try {
+            await removePlant(plant.id);
+
+            setMyPlants((oldValue) =>
+              oldValue.filter((item) => item.id !== plant.id)
+            );
+          } catch (error) {
+            Alert.alert("Não foi possível remover! 🤔");
+          }
+        },
+      },
+    ]);
+  }
+
+  if (loading) return <Load />;
+
   return (
     <View style={styles.container}>
       <Header />
@@ -55,7 +81,14 @@ export function MyPlants() {
         <FlatList
           data={myPlants}
           keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => <PlantCardSecondary data={item} />}
+          renderItem={({ item }) => (
+            <PlantCardSecondary
+              data={item}
+              handleRemove={() => {
+                handleRemove(item);
+              }}
+            />
+          )}
           showsVerticalScrollIndicator={false}
         />
       </View>

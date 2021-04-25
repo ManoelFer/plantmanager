@@ -5,6 +5,7 @@ import {
   Alert,
   StyleSheet,
   View,
+  ScrollView,
   Image,
   TouchableOpacity,
   Platform,
@@ -77,7 +78,10 @@ export function PlantSave() {
   }
 
   return (
-    <>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.container}
+    >
       <View style={styles.container}>
         <View style={styles.plantInfo}>
           <SvgFromUri uri={plant.photo} height={150} width={150} />
@@ -119,7 +123,7 @@ export function PlantSave() {
           <Button title="Cadastrar planta" onPress={handleSave} />
         </View>
       </View>
-    </>
+    </ScrollView>
   );
 }
 

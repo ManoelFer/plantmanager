@@ -69,12 +69,7 @@ const styles = StyleSheet.create({
   title: {
     top: 38,
     fontSize: 28,
-    // Text component cuts part of the text if fontWeight bold is used
-    fontWeight: "bold",
-
-    //Resolve bug with font bold
     fontFamily: fonts.heading,
-
     textAlign: "center",
     color: colors.heading,
     lineHeight: 34,
